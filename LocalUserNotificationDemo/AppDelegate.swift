@@ -2,12 +2,12 @@
 //  AppDelegate.swift
 //  LocalUserNotificationDemo
 //
-//  Created by Supa Ram on 2/5/17.
+//  Created by Charles E on 2/5/17.
 //  Copyright © 2017 LEO Technology. All rights reserved.
 //
 
 import UIKit
-
+import UserNotifications
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -16,6 +16,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        window = UIWindow(frame: UIScreen.main.bounds)
+        UNUserNotificationCenter.current().delegate = self
+        
+        
+        let vc = ViewController()
+        let nav1 = UINavigationController()
+        nav1.navigationBar.isTranslucent = false
+        nav1.navigationBar.barTintColor = .darkGray
+       
+        nav1.viewControllers = [vc]
+        window?.rootViewController = nav1
+        
+        application.isStatusBarHidden = false
+        
+        window?.makeKeyAndVisible()
+
         return true
     }
 
@@ -40,7 +56,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    
+    
 
 
+}
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        completionHandler(.alert)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        print("i0S 10 didReceive Triggered")
+        if response.notification.request.content.categoryIdentifier == "demoCategory" {
+            // Handle the actions for the expired timer.
+            if response.actionIdentifier == "YES_ACTION" {
+                print("Tapped YES")
+            }
+            else if response.actionIdentifier == "NO_ACTION" {
+                print("Tapped NO")
+            }
+        }
+
+        completionHandler()
+    }
 }
 
